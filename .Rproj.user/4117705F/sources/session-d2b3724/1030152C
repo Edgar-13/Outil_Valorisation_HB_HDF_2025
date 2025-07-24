@@ -1,0 +1,26 @@
+{
+    "id": "1030152C",
+    "path": "C:/Users/edgar.matter/Desktop/Outil_valorisation_HB_HDF_2025/R/fun_tracer_chroniques_indices.R",
+    "project_path": "R/fun_tracer_chroniques_indices.R",
+    "type": "r_source",
+    "hash": "0",
+    "contents": "",
+    "dirty": false,
+    "created": 1753263956615.0,
+    "source_on_save": false,
+    "relative_order": 3,
+    "properties": {
+        "source_window_id": "",
+        "Source": "Source",
+        "cursorPosition": "244,13",
+        "scrollLine": "0"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1753343286,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1753343286512,
+    "read_only": false,
+    "read_only_alternatives": []
+}
