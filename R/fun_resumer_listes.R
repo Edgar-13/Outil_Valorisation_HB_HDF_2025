@@ -58,6 +58,6 @@ resumer_listes <- function(listes_stations) {
       EQB = eqb,
       `Période` = periode,
       `Années` = n_op,
-      `Taxons` = nb_taxa
+      `Nb Taxons` = nb_taxa
     )
 }

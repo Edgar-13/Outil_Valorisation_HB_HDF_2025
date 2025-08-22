@@ -1,7 +1,20 @@
-library(dplyr)
-library(sf)
-library(leaflet)
-library(sf)
+packages_necessaires <- c("dplyr", "sf","leaflet")
+
+installer_et_charger_packages <- function(packages) {
+  installes <- rownames(installed.packages())
+  for (pkg in packages) {
+    if (!pkg %in% installes) {
+      install.packages(pkg, dependencies = TRUE)
+    }
+    library(pkg, character.only = TRUE)
+  }
+}
+
+# Appel de la fonction
+installer_et_charger_packages(packages_necessaires)
+
+#unlink("../data_carte.rda")
+unlink("R:/ServicesRegionaux/Service_Connaissance/7-Laboratoire_hydrobiologie/Donnees/Syntheses_et_valorisation/Outil_valorisation_HB_HDF_2025/data_carte.rda")
 
 limites_bassin_utiles <- sf::st_read("R:/ServicesRegionaux/Service_Connaissance/7-Laboratoire_hydrobiologie/Donnees/Syntheses_et_valorisation/Outil_valorisation_HB_HDF_2025/AEAP_AESN/AEAP_AESN_utile.shp")%>%
   sf::st_transform(crs = 4326) %>%
@@ -47,7 +60,7 @@ edl <- sf::st_read("R:/ServicesRegionaux/Service_Connaissance/7-Laboratoire_hydr
 save(limites_bassin_utiles, limites_bassin_utiles_l,
      limites_dep_utiles , limites_dep_utiles_l,
      centroids, labels_df,edl,
-     file = "app/data_carte.rda")
+     file = "R:/ServicesRegionaux/Service_Connaissance/7-Laboratoire_hydrobiologie/Donnees/Syntheses_et_valorisation/Outil_valorisation_HB_HDF_2025/data_carte.rda")
 
 
 # usethis::use_data(

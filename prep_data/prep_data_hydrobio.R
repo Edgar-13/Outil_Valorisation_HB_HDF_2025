@@ -6,35 +6,91 @@
 #' 3. Préparant les données pour l'affichage cartographique
 #' 4. Résumant les listes faunistiques et floristiques
 
-source("packages.R")
+
+# # Fonction pour installer et charger les packages requis
+# packages_necessaires <- c(
+#   "dplyr", "lubridate", "purrr", "stringr", "sf",
+#   "readxl", "openxlsx2", "janitor", "tidyr", "hubeau","vroom",
+#   "pak", "this.path"
+# )
+#
+# installer_et_charger_packages <- function(packages) {
+#   installes <- rownames(installed.packages())
+#   for (pkg in packages) {
+#     if (!pkg %in% installes) {
+#       install.packages(pkg, dependencies = TRUE)
+#     }
+#     library(pkg, character.only = TRUE)
+#   }
+# }
+#
+# # Appel de la fonction
+# installer_et_charger_packages(packages_necessaires)
+
+
+# Active l'environnement renv
+if (file.exists("renv/activate.R")) {  source("renv/activate.R")
+} else {  stop("Le fichier renv/activate.R est introuvable. L'application ne peut pas démarrer.")}
+
+required_packages <- c(  "dplyr", "tidyr", "purrr", "stringr", "forcats", "lubridate",  "htmltools", "hubeau", "janitor", "knitr", "leaflet", "leaflet.extras",  "openxlsx2", "patchwork", "plotly", "sf", "shiny", "shinydashboard",  "pkgload", "here", "munsell", "readxl", "vroom","pak", "this.path")
+
+installed_pkgs <- rownames(installed.packages())
+
+for (pkg in required_packages) {
+  if (!pkg %in% installed_pkgs) {
+    message("Installation du package manquant : ", pkg)
+    renv::install(pkg)
+  }
+}
+invisible(lapply(required_packages, library, character.only = TRUE))
+
+
+# definir le working directory à l'endroit où on veut enregistrer le fichier
+# setwd(here())
 
 # Installation des dépendances
-# if (!require(pak)) install.packages("pak")
-# pak::pkg_install(c("Edgar-13/HydrobioHdF", "CedricMondy/SEEEapi"))
-# library(HydrobioHdF)
-source("app/R/fun_resumer_listes.R")
-source("app/R/fun_get_data_hydrobio.R")
+if (!require(pak)) install.packages("pak")
+pak::pkg_install(c("CedricMondy/SEEEapi"))
 
-# Suppression du fichier de données s'il existe
-unlink("data_hydrobioTEST.rda")
+#On charge le path du fichier actuel pour l utiliser pour charger les scripts ci-dessous
+chemin_script <- this.path::this.path()
+dossier_script <- dirname(chemin_script)
+setwd(dossier_script)
+
+source(file.path(dossier_script, "fun_resumer_listes.R"))
+source(file.path(dossier_script, "fun_get_data_hydrobio.R"))
 
 # Date de mise à jour des données
 date_donnees <- Sys.Date()
 
 # Définition des départements à traiter
-departements <- c('02','59','60','62','80','08','51','52','55','95','77') # Déartements dans lesquels il y a des stations suivies
-#departements <- c('80') # Déartements dans lesquels il y a des stations suivies
+#departements <- c('02','59','60','62','80','08','51','52','55','95','77') # Déartements dans lesquels il y a des stations suivies
+departements <- c('80') # Déartements dans lesquels il y a des stations suivies
 departements_extra <- c("")  # Départements limitrophes avec stations en régie
 
 ## Creation d une liste code_stations qui contient le code station de toutes les stations dans la zone d'etude
 # library(sf)
-points_qgis <- st_read("R:/ServicesRegionaux/Service_Connaissance/7-Laboratoire_hydrobiologie/Donnees/Syntheses_et_valorisation/Outil_valorisation_HB_HDF_2025/AEAP_AESN/StationsPerimetreUtile.shp")
+points_qgis <- st_read("R:/ServicesRegionaux/Service_Connaissance/7-Laboratoire_hydrobiologie/Donnees/Syntheses_et_valorisation/Outil_valorisation_HB_HDF_2025/AEAP_AESN/StationsTOUTES.shp")
 code_stations <- unique(points_qgis$code_stati)
 
 # Import des suivis en régie et de la typologie nationale
 regie <- importer_suivis_regie(departements,code_stations)
 # regie <- HydrobioIdF::importer_suivis_regie("dev/Historique prog labo.xlsx")
-typo_nationale <- read_excel("app/prep_data/Reseau_DREAL_HdF_tableau_referent_v13.xls")|>
+#fichier <- file.path(dossier_script,"Reseau_DREAL_HdF_tableau_referent_v13.xls")
+
+
+# Liste des fichiers dans dossier_script contenant "HdF_tableau_referent"
+fichiers <- list.files(path = dossier_script, pattern = "HdF_tableau_referent", full.names = TRUE)
+print(fichiers)
+# Prendre le premier fichier trouvé (ou gérer le cas où il n'y en aurait pas)
+if (length(fichiers) == 0) {
+  stop("Aucun fichier trouvé avec 'HdF_tableau_referent' dans ", dossier_script)
+} else {
+  fichier <- fichiers[1]
+}
+
+
+typo_nationale <- read_excel(fichier)|>
   dplyr::rename(CdStationMesureEauxSurface=4,TypeCEStationMesureEauxSurface=5)|>
   dplyr::slice(-1)|> dplyr::select(4,5)
 # typo_nationale <- sf::st_read("dev/stations_reseaux_sn.gpkg", layer = "stations_reseaux_sn") |>
@@ -175,23 +231,23 @@ stations_seee <- stations |>
 
 # Calcul de l'état biologique avec la méthode 2018
 etat_bio <- (SEEEapi::calc_indic(
-    indic = "EBio_CE_2018",
-    version = "1.0.1",
-    locally = TRUE,
-    dir_algo = "algo_seee",
-    data = list(
-      stations_seee,
-      indices_seee |>
-        dplyr::filter(CODE_PAR == 5856),
-      indices_seee |>
-        dplyr::filter(CODE_PAR == 2928),
-      indices_seee |>
-        dplyr::filter(CODE_PAR == 7613),
-      indices_seee |>
-        dplyr::filter(CODE_PAR  %in% c("NA", "7036") ) |>
-        dplyr::arrange(CODE_STATION, CODE_OPERATION, CODE_PAR)
-    )
-  )$result) |>
+  indic = "EBio_CE_2018",
+  version = "1.0.1",
+  locally = TRUE,
+  dir_algo = "algo_seee",
+  data = list(
+    stations_seee,
+    indices_seee |>
+      dplyr::filter(CODE_PAR == 5856),
+    indices_seee |>
+      dplyr::filter(CODE_PAR == 2928),
+    indices_seee |>
+      dplyr::filter(CODE_PAR == 7613),
+    indices_seee |>
+      dplyr::filter(CODE_PAR  %in% c("NA", "7036") ) |>
+      dplyr::arrange(CODE_STATION, CODE_OPERATION, CODE_PAR)
+  )
+)$result) |>
   dplyr::bind_rows(
     SEEEapi::calc_indic(
       indic = "EBio_CE_2018",
@@ -608,6 +664,8 @@ donnees_carte_taxons <-
 
 resumes_listes <- resumer_listes(listes_taxo)
 
+# Si tout a fonctionné, suppression du fichier de données s'il existe
+unlink("R:/ServicesRegionaux/Service_Connaissance/7-Laboratoire_hydrobiologie/Donnees/Syntheses_et_valorisation/Outil_valorisation_HB_HDF_2025/data_hydrobio1.rda")
 
 # Sauvegarde des données préparées
 # Les objets suivants sont sauvegardés :
@@ -626,4 +684,4 @@ resumes_listes <- resumer_listes(listes_taxo)
 save(date_donnees, regie, stations, indices, valeurs_seuils_stations, etat_bio,
      listes_taxo, resumes_listes, acronymes_indices, donnees_carte,
      donnees_carte_taxons, parametres_eqr,
-     file = "../data_hydrobioTEST.rda")
+     file = "R:/ServicesRegionaux/Service_Connaissance/7-Laboratoire_hydrobiologie/Donnees/Syntheses_et_valorisation/Outil_valorisation_HB_HDF_2025/data_hydrobio1.rda")

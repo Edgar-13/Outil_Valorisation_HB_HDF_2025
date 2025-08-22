@@ -1,15 +1,15 @@
 {
     "dialog-state": {
-        "query": "ggpl",
+        "query": "fiche",
         "path": "",
         "regex": false,
         "caseSensitive": false,
         "wholeWord": false,
         "filePatterns": [],
-        "useGitGrep": false,
+        "useGitGrep": true,
         "excludeGitIgnore": true,
         "excludeFilePatterns": [],
-        "resultsCount": 152,
+        "resultsCount": 110,
         "errorCount": 0,
         "replaceErrors": "",
         "projectRelative": true

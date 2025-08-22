@@ -165,9 +165,12 @@ ui <- fluidPage(
               )
             ),
             tabPanel(
-              title = p(
-                class = "TabMethode",
-                "Données & Traitements"
+              title = p(class = "TabMethode", "Données & Traitements"),
+              fluidRow(
+                column(
+                  width = 12,
+                  mod_donnees_traitements_ui(id = "texte_methode")
+                )
               )
             )
           )
