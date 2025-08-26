@@ -73,6 +73,10 @@ mod_export_print_ui <- function(id) {
             max-height: none !important;
           }
 
+            a[href]:after {
+    content: ''; /* empêche d’afficher l’URL après le texte */
+            }
+
           page {
             margin: 1.5cm;
           }

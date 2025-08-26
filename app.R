@@ -61,6 +61,7 @@ ui <- fluidPage(
                     bottom:0;
                     right:0;
                     padding:10px;
+                    z-index : -1;
                     width:200px;
                     '
         ),
@@ -109,7 +110,6 @@ ui <- fluidPage(
           ),
           choix_multiple = TRUE
         )
-        #div(class = "page-break")
       ),
 
       div(class = "no-print",
@@ -147,7 +147,9 @@ ui <- fluidPage(
                   width = 5,
                   mod_synthese_station_ui(id = "synthese_station")
                 )
-              )
+              ),
+              mod_afficher_glossaire_ui(id = "glossaire")
+
             ),
             tabPanel(
               title = "Taxons",
@@ -192,6 +194,11 @@ server <- function(input, output, session) {
   choix_departements <- mod_selecteur_server(id = "departements")
   choix_eqbs <- mod_selecteur_server(id = "eqb")
   choix_stations <- mod_regie_server(id = "regie", choix_eqb = choix_eqbs, choix_dep = choix_departements)
+
+  # sélecteur des départements
+  session$userData$departements <- mod_selecteur_server(id = "departements")
+  # sélecteur EQB
+  session$userData$eqb <- mod_selecteur_server(id = "eqb")
 
   station <- mod_carte_server(
     "carte",
