@@ -32,17 +32,6 @@ mod_export_print_ui <- function(id) {
           }
 
           .ma-carte {
-/*            width: 600px !important;
-            height: 400px !important;
-
-            position: fixed !important;
-            top: 50% !important;
-            left: 50% !important;
-            transform: translate(-50%, -50%) !important;
-
-            /* Optionnel : ajouter une bordure ou un fond */
-            border: 1px solid #ccc !important;
-            background-color: white !important;*/
           }
 
           /* masque les contrôles Leaflet pour un rendu propre à l'impression */
@@ -64,7 +53,7 @@ mod_export_print_ui <- function(id) {
 
           .page-break {
             page-break-after: always;
-            break-after: page;  /* plus moderne */
+            break-after: page;
           }
 
           .print-full-height {

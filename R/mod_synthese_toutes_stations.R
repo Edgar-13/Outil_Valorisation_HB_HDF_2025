@@ -15,16 +15,7 @@
 mod_synthese_toutes_stations_ui <- function(id){
   ns <- NS(id)
 
-  # css <- HTML(
-  #   paste0(".sub-tabpanel {
-  #              height-max: 350px;
-  #          }")
-  # )
-
   tagList(
-    # tags$head(
-    #   tags$style(css)
-    # ),
     uiOutput(ns("synthese_stations"))
   )
 }

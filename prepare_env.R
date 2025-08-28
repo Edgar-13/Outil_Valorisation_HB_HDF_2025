@@ -1,6 +1,5 @@
 # -------------------------------------------------------------------
 # Script de préparation de l'environnement R avec renv
-# À placer dans le dossier "app/"
 # -------------------------------------------------------------------
 
 # Étape 1 : Installer renv si nécessaire

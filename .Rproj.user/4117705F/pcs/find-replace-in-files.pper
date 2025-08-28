@@ -1,6 +1,6 @@
 {
     "dialog-state": {
-        "query": "années de suivi",
+        "query": "page-break",
         "path": "",
         "regex": false,
         "caseSensitive": false,
@@ -9,7 +9,7 @@
         "useGitGrep": true,
         "excludeGitIgnore": true,
         "excludeFilePatterns": [],
-        "resultsCount": 10,
+        "resultsCount": 6,
         "errorCount": 0,
         "replaceErrors": "",
         "projectRelative": true

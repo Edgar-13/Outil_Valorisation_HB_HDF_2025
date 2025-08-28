@@ -27,28 +27,3 @@ for (pkg in required_packages) {
 
 # Charge tous les packages
 invisible(lapply(required_packages, library, character.only = TRUE))
-
-#library(ggplot2)
-# library(dplyr)
-# library(tidyr)
-# library(purrr)
-# library(stringr)
-# library(forcats)
-# library(lubridate)
-#
-# library(htmltools)
-# library(hubeau)
-# library(janitor)
-# library(knitr)
-# library(leaflet)
-# library(leaflet.extras)
-# library(openxlsx2)
-# library(patchwork)
-# library(plotly)
-# library(sf)
-# library(shiny)
-# library(shinydashboard)
-# #library(tidyverse)
-# library(pkgload)
-# library(here)
-# library(munsell)

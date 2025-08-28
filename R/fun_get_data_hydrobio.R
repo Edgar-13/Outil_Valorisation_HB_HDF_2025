@@ -229,7 +229,7 @@ importer_suivis_regie <- function(departements,code_stations) {
                        '13' = "IBMA",
                        '27' = "IBMR"
       ),
-      code_prelevement = '1' #je triche pour avoir le bon format et faire des tests, normalement 0 ou 1
+      code_prelevement = '1' #je triche pour avoir le bon format de fichier, normalement 0 ou 1
     )%>%
     rename(cours_deau = libelle_cours_eau,
            commune = libelle_commune,
